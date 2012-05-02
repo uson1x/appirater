@@ -45,6 +45,7 @@ NSString *const kAppiraterCurrentVersion			= @"kAppiraterCurrentVersion";
 NSString *const kAppiraterRatedCurrentVersion		= @"kAppiraterRatedCurrentVersion";
 NSString *const kAppiraterDeclinedToRate			= @"kAppiraterDeclinedToRate";
 NSString *const kAppiraterReminderRequestDate		= @"kAppiraterReminderRequestDate";
+NSString *const kAppiraterReminderRequestCount		= @"kAppiraterReminderRequestCount";
 
 NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=APP_ID";
 
@@ -115,6 +116,11 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 											   otherButtonTitles:APPIRATER_RATE_BUTTON, APPIRATER_RATE_LATER, nil] autorelease];
 	self.ratingAlert = alertView;
 	[alertView show];
+	
+	NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+	int remindRequestCount = [userDefaults integerForKey:kAppiraterReminderRequestCount];
+	remindRequestCount++;
+	[userDefaults setInteger:remindRequestCount forKey:kAppiraterReminderRequestCount];
 }
 
 - (BOOL)ratingConditionsHaveBeenMet {
@@ -152,6 +158,10 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 	NSTimeInterval timeSinceReminderRequest = [[NSDate date] timeIntervalSinceDate:reminderRequestDate];
 	NSTimeInterval timeUntilReminder = 60 * 60 * 24 * APPIRATER_TIME_BEFORE_REMINDING;
 	if (timeSinceReminderRequest < timeUntilReminder)
+		return NO;
+	
+	int remindRequestCount = [userDefaults integerForKey:kAppiraterReminderRequestCount];
+	if(remindRequestCount > (APPIRATER_MAX_REMINDERS_COUNT - 1))
 		return NO;
 	
 	return YES;
@@ -200,6 +210,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 		[userDefaults setBool:NO forKey:kAppiraterRatedCurrentVersion];
 		[userDefaults setBool:NO forKey:kAppiraterDeclinedToRate];
 		[userDefaults setDouble:0 forKey:kAppiraterReminderRequestDate];
+		[userDefaults setInteger:0 forKey:kAppiraterReminderRequestCount];
 	}
 	
 	[userDefaults synchronize];

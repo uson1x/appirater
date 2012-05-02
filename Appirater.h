@@ -43,6 +43,7 @@ extern NSString *const kAppiraterCurrentVersion;
 extern NSString *const kAppiraterRatedCurrentVersion;
 extern NSString *const kAppiraterDeclinedToRate;
 extern NSString *const kAppiraterReminderRequestDate;
+extern NSString *const kAppiraterReminderRequestCount;
 
 /*
  Place your Apple generated software id here.
@@ -120,6 +121,11 @@ extern NSString *const kAppiraterReminderRequestDate;
  will wait before reminding them.
  */
 #define APPIRATER_TIME_BEFORE_REMINDING		1	// double
+
+/*
+ Maximum reminder count.
+ */
+#define APPIRATER_MAX_REMINDERS_COUNT	4		// integer
 
 /*
  'YES' will show the Appirater alert everytime. Useful for testing how your message
